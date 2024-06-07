@@ -1,61 +1,62 @@
-function Gameboard () {
-    const board = [
-      [' ', ' ', ' '],
-      [' ', ' ', ' '],
-      [' ', ' ', ' ']
-};
-
-function printBoard () {
-  console.clear();
-  console.log('  0 1 2');
-  board.forEach((row, index) => {
-    console.log(`${index} ${row.join('|')}`);
-    if (index < 2) console.log('  -----');
-  });
-};
-
-function makeMove  (row, col, player)  {
-  if (board[row][col] === ' ') {
-    board[row][col] = player;
-    return true;
-  }
-  return false;
-};
-
-
-function checkWin (player) {
-  const winPatterns = [
-    [board[0][0], board[0][1], board[0][2]],
-    [board[1][0], board[1][1], board[1][2]],
-    [board[2][0], board[2][1], board[2][2]],
-    [board[0][0], board[1][0], board[2][0]],
-    [board[0][1], board[1][1], board[2][1]],
-    [board[0][2], board[1][2], board[2][2]],
-    [board[0][0], board[1][1], board[2][2]],
-    [board[0][2], board[1][1], board[2][0]],
+// Gameboard module
+const Gameboard = (() => {
+  const board = [
+    [' ', ' ', ' '],
+    [' ', ' ', ' '],
+    [' ', ' ', ' ']
   ];
 
-  return winPatterns.some(pattern => pattern.every(cell => cell === player));
-};
+  const printBoard = () => {
+    console.clear();
+    console.log('  0 1 2');
+    board.forEach((row, index) => {
+      console.log(`${index} ${row.join('|')}`);
+      if (index < 2) console.log('  -----');
+    });
+  };
 
-function checkDraw () {
-  return board.flat().every(cell => cell !== ' ');
-};
+  const makeMove = (row, col, player) => {
+    if (board[row][col] === ' ') {
+      board[row][col] = player;
+      return true;
+    }
+    return false;
+  };
 
-return {
-  printBoard,
-  makeMove,
-  checkWin,
-  checkDraw
-};
+  const checkWin = (player) => {
+    const winPatterns = [
+      [board[0][0], board[0][1], board[0][2]],
+      [board[1][0], board[1][1], board[1][2]],
+      [board[2][0], board[2][1], board[2][2]],
+      [board[0][0], board[1][0], board[2][0]],
+      [board[0][1], board[1][1], board[2][1]],
+      [board[0][2], board[1][2], board[2][2]],
+      [board[0][0], board[1][1], board[2][2]],
+      [board[0][2], board[1][1], board[2][0]],
+    ];
+
+    return winPatterns.some(pattern => pattern.every(cell => cell === player));
+  };
+
+  const checkDraw = () => {
+    return board.flat().every(cell => cell !== ' ');
+  };
+
+  return {
+    printBoard,
+    makeMove,
+    checkWin,
+    checkDraw
+  };
 })();
 
-function Player  (name, marker) {
+// Player factory
+const Player = (name, marker) => {
   return { name, marker };
 };
 
 // Game module
-function Game (()  {
+const Game = (() => {
   const playerX = Player('Player X', 'X');
   const playerO = Player('Player O', 'O');
   let currentPlayer = playerX;
@@ -96,5 +97,3 @@ function Game (()  {
 
 // Start the game
 Game.playGame();
-
-

@@ -37,3 +37,16 @@ function checkWin (player) {
 
   return winPatterns.some(pattern => pattern.every(cell => cell === player));
 };
+
+function checkDraw () {
+  return board.flat().every(cell => cell !== ' ');
+};
+
+return {
+  printBoard,
+  makeMove,
+  checkWin,
+  checkDraw
+};
+})();
+

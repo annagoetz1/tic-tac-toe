@@ -13,3 +13,11 @@ function printBoard () {
     if (index < 2) console.log('  -----');
   });
 };
+
+function makeMove  (row, col, player)  {
+  if (board[row][col] === ' ') {
+    board[row][col] = player;
+    return true;
+  }
+  return false;
+};

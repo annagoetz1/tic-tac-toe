@@ -94,5 +94,7 @@ function Game (()  {
   return { playGame };
 })();
 
+// Start the game
+Game.playGame();
 
 

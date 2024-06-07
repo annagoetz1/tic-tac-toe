@@ -50,3 +50,49 @@ return {
 };
 })();
 
+function Player  (name, marker) {
+  return { name, marker };
+};
+
+// Game module
+function Game (()  {
+  const playerX = Player('Player X', 'X');
+  const playerO = Player('Player O', 'O');
+  let currentPlayer = playerX;
+
+  const playGame = () => {
+    let gameWon = false;
+    let gameDraw = false;
+
+    while (!gameWon && !gameDraw) {
+      Gameboard.printBoard();
+      console.log(`${currentPlayer.name}, it's your turn.`);
+
+      const row = parseInt(prompt('Enter row (0, 1, 2): '), 10);
+      const col = parseInt(prompt('Enter column (0, 1, 2): '), 10);
+
+      if (Gameboard.makeMove(row, col, currentPlayer.marker)) {
+        gameWon = Gameboard.checkWin(currentPlayer.marker);
+        if (gameWon) {
+          Gameboard.printBoard();
+          console.log(`${currentPlayer.name} wins!`);
+        } else {
+          gameDraw = Gameboard.checkDraw();
+          if (gameDraw) {
+            Gameboard.printBoard();
+            console.log('The game is a draw.');
+          } else {
+            currentPlayer = currentPlayer === playerX ? playerO : playerX;
+          }
+        }
+      } else {
+        console.log('Invalid move, try again.');
+      }
+    }
+  };
+
+  return { playGame };
+})();
+
+
+

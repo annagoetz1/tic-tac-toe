@@ -97,3 +97,30 @@ const Game = (() => {
 
 // Start the game
 Game.playGame();
+
+const gameDisplay = () => {
+  const gameBoard= document.getElementById('gameBoard');
+  gameBoard.innerHTML = ''; //clear existing cells
+  for (let row = 0; row <3; row++) {
+    for (let col = 0; col < 3; col++) {
+      const cell = document.createElement ('div');
+      cell.classList.add('cell');
+      cell.dataset.row = row;
+      cell.dataset.col = col;
+      cell.textContent = board[row][col];
+
+      cell.addEventListener ('click', () => {
+if (makeMove(row, col, currentPlayervalue)) {
+  cell.textContent = currentPlayer.value;
+  currentPlayer.value = currentPlayer.value === 'X' ? 'O' : 'X'; //switch player
+}
+}); 
+gameBoard.appendChild(cell);
+
+      }
+
+    }
+  };
+
+  // initialize the board
+  gameDisplay();

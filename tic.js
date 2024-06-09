@@ -101,6 +101,7 @@ Game.playGame();
 const gameDisplay = () => {
   const gameBoard= document.getElementById('gameBoard');
   gameBoard.innerHTML = ''; //clear existing cells
+  const board = Gameboard.board; // ensure this variable matches
   for (let row = 0; row <3; row++) {
     for (let col = 0; col < 3; col++) {
       const cell = document.createElement ('div');
@@ -110,7 +111,7 @@ const gameDisplay = () => {
       cell.textContent = board[row][col];
 
       cell.addEventListener ('click', () => {
-if (makeMove(row, col, currentPlayervalue)) {
+if (makeMove(row, col, currentPlayer.value)) {
   cell.textContent = currentPlayer.value;
   currentPlayer.value = currentPlayer.value === 'X' ? 'O' : 'X'; //switch player
 }

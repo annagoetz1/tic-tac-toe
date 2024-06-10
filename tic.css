@@ -7,7 +7,7 @@
     width: max-content;
     border: 2px solid #333;
   }
-  * Style for each cell */
+  
 .cell {
   display: flex;
   justify-content: center;

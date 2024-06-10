@@ -5,6 +5,8 @@ const Gameboard = (() => {
     [' ', ' ', ' '],
     [' ', ' ', ' ']
   ];
+  //get current state of board
+  const getBoard = () => board;
 
   const printBoard = () => {
     console.clear();
@@ -43,7 +45,7 @@ const Gameboard = (() => {
   };
 
   return {
-    board,
+    getBoard,
     printBoard,
     makeMove,
     checkWin,
@@ -62,51 +64,49 @@ const Game = (() => {
   const playerO = Player('Player O', 'O');
   let currentPlayer = playerX;
 
-  const playGame = () => {
-    let gameWon = false;
-    let gameDraw = false;
+  const getCurrentPlayer = () => currentPlayer;
 
-    while (!gameWon && !gameDraw) {
-      Gameboard.printBoard();
-      console.log(`${currentPlayer.name}, it's your turn.`);
+  const switchPlayer = () => {
+    currentPlayer = currentPlayer === playerX ? playerO : playerX;
+  };
 
-      let row, col;
-      // Prompt user for input and ensure it's valid
-      do {
-        row = parseInt(prompt('Enter row (0, 1, 2): '), 10);
-        col = parseInt(prompt('Enter column (0, 1, 2): '), 10);
-      } while (isNaN(row) || isNaN(col) || row < 0 || row > 2 || col < 0 || col > 2);
-
-      if (Gameboard.makeMove(row, col, currentPlayer.marker)) {
-        gameWon = Gameboard.checkWin(currentPlayer.marker);
-        if (gameWon) {
-          Gameboard.printBoard();
-          console.log(`${currentPlayer.name} wins!`);
-        } else {
-          gameDraw = Gameboard.checkDraw();
-          if (gameDraw) {
-            Gameboard.printBoard();
-            console.log('The game is a draw.');
-          } else {
-            currentPlayer = currentPlayer === playerX ? playerO : playerX;
-          }
-        }
+  const playTurn = (row, col) => {
+    if (Gameboard.makeMove(row, col, currentPlayer.marker)) {
+      updateBoardDisplay();
+      if (Gameboard.checkWin(currentPlayer.marker)) {
+        setTimeout(() => alert(`${currentPlayer.name} wins!`), 100);
+      } else if (Gameboard.checkDraw()) {
+        setTimeout(() => alert('The game is a draw.'), 100);
       } else {
-        console.log('Invalid move, try again.');
+        switchPlayer();
+        alert(`${currentPlayer.name}, it's your turn.`);
       }
+    } else {
+      alert('Invalid move, try again.');
     }
   };
 
-  return { playGame };
+  return {
+    getCurrentPlayer,
+    playTurn,
+  };
 })();
 
-// Start the game
-Game.playGame();
+// Update the board display
+const updateBoardDisplay = () => {
+  const board = Gameboard.getBoard();
+  const cells = document.querySelectorAll('.cell');
+  cells.forEach(cell => {
+    const row = cell.dataset.row;
+    const col = cell.dataset.col;
+    cell.textContent = board[row][col];
+  });
+};
 
 const gameDisplay = () => {
   const gameBoard = document.getElementById('gameBoard');
-  gameBoard.innerHTML = ''; // clear existing cells
-  const board = Gameboard.board;
+  gameBoard.innerHTML = ''; // Clear existing cells
+  const board = Gameboard.getBoard();
 
   for (let row = 0; row < 3; row++) {
     for (let col = 0; col < 3; col++) {
@@ -117,19 +117,7 @@ const gameDisplay = () => {
       cell.textContent = board[row][col];
 
       cell.addEventListener('click', () => {
-        const currentPlayer = Game.getCurrentPlayer();
-        if (Gameboard.makeMove(row, col, currentPlayer.marker)) {
-          cell.textContent = currentPlayer.marker;
-          if (Gameboard.checkWin(currentPlayer.marker)) {
-            alert(`${currentPlayer.name} wins!`);
-          } else if (Gameboard.checkDraw()) {
-            alert('The game is a draw.');
-          } else {
-            Game.switchPlayer();
-          }
-        } else {
-          alert('Invalid move, try again.');
-        }
+        Game.playTurn(row, col);
       });
 
       gameBoard.appendChild(cell);
@@ -137,5 +125,5 @@ const gameDisplay = () => {
   }
 };
 
-  // initialize the board
-  gameDisplay();
+// Initialize the board display
+gameDisplay();

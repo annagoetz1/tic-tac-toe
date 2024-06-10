@@ -43,6 +43,7 @@ const Gameboard = (() => {
   };
 
   return {
+    board,
     printBoard,
     makeMove,
     checkWin,
@@ -69,8 +70,12 @@ const Game = (() => {
       Gameboard.printBoard();
       console.log(`${currentPlayer.name}, it's your turn.`);
 
-      const row = parseInt(prompt('Enter row (0, 1, 2): '), 10);
-      const col = parseInt(prompt('Enter column (0, 1, 2): '), 10);
+      let row, col;
+      // Prompt user for input and ensure it's valid
+      do {
+        row = parseInt(prompt('Enter row (0, 1, 2): '), 10);
+        col = parseInt(prompt('Enter column (0, 1, 2): '), 10);
+      } while (isNaN(row) || isNaN(col) || row < 0 || row > 2 || col < 0 || col > 2);
 
       if (Gameboard.makeMove(row, col, currentPlayer.marker)) {
         gameWon = Gameboard.checkWin(currentPlayer.marker);

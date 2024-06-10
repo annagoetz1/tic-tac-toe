@@ -7,3 +7,23 @@
     width: max-content;
     border: 2px solid #333;
   }
+  * Style for each cell */
+.cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  font-size: 2em;
+  font-weight: bold;
+  background-color: #fff;
+  border: 2px solid #333;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s;
+}
+
+/* Style for cell when hovered over */
+.cell:hover {
+  background-color: #f0f0f0;
+}

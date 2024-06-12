@@ -85,10 +85,25 @@ const Game = (() => {
       alert('Invalid move, try again.');
     }
   };
+  const startGame = () => {
+    const playerXName = prompt("Enter Player X's name:");
+    const playerOName = prompt("Enter Player O's name:");
+    
+    playerX = Player(playerXName, 'X');
+    playerO = Player(playerOName, 'O');
+    currentPlayer = playerX;
+
+    document.getElementById('firstPlayer').textContent = `Player X: ${playerX.name}`;
+    document.getElementById('secondPlayer').textContent = `Player O: ${playerO.name}`;
+
+    alert(`${currentPlayer.name}, it's your turn.`);
+    gameDisplay();
+  };
 
   return {
     getCurrentPlayer,
     playTurn,
+    startGame,
   };
 })();
 

@@ -139,6 +139,7 @@ const gameDisplay = () => {
     }
   }
 };
-
+document.addEventListener('DOMContentLoaded', () => {
 // Initialize the board display
 gameDisplay();
+});

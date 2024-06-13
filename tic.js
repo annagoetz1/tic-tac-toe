@@ -1,5 +1,5 @@
 const Gameboard = (() => {
-  const board = [
+  let board = [
     [' ', ' ', ' '],
     [' ', ' ', ' '],
     [' ', ' ', ' ']
@@ -8,13 +8,13 @@ const Gameboard = (() => {
   // Get the current state of the board
   const getBoard = () => board;
 
-  const printBoard = () => {
-    console.clear();
-    console.log('  0 1 2');
-    board.forEach((row, index) => {
-      console.log(`${index} ${row.join('|')}`);
-      if (index < 2) console.log('  -----');
-    });
+  // Reset the board
+  const resetBoard = () => {
+    board = [
+      [' ', ' ', ' '],
+      [' ', ' ', ' '],
+      [' ', ' ', ' ']
+    ];
   };
 
   const makeMove = (row, col, player) => {
@@ -46,7 +46,7 @@ const Gameboard = (() => {
 
   return {
     getBoard,
-    printBoard,
+    resetBoard,
     makeMove,
     checkWin,
     checkDraw
@@ -60,23 +60,29 @@ const Player = (name, marker) => {
 
 // Game module
 const Game = (() => {
-  let playerX;
-  let playerO;
-  let currentPlayer;
+  let playerX = Player('Player X', 'X');
+  let playerO = Player('Player O', 'O');
+  let currentPlayer = playerX;
 
-  // Switch player function to return the next player
+  const getCurrentPlayer = () => currentPlayer;
+
   const switchPlayer = () => {
     currentPlayer = currentPlayer === playerX ? playerO : playerX;
   };
 
   const playTurn = (row, col) => {
-    // Fix marker access and player update logic
     if (Gameboard.makeMove(row, col, currentPlayer.marker)) {
       updateBoardDisplay();
       if (Gameboard.checkWin(currentPlayer.marker)) {
-        setTimeout(() => alert(`${currentPlayer.name} wins!`), 100);
+        setTimeout(() => {
+          document.getElementById('resultDisplay').textContent = `${currentPlayer.name} wins!`;
+          alert(`${currentPlayer.name} wins!`);
+        }, 100);
       } else if (Gameboard.checkDraw()) {
-        setTimeout(() => alert('The game is a draw.'), 100);
+        setTimeout(() => {
+          document.getElementById('resultDisplay').textContent = 'The game is a draw.';
+          alert('The game is a draw.');
+        }, 100);
       } else {
         switchPlayer();
         alert(`${currentPlayer.name}, it's your turn.`);
@@ -89,21 +95,32 @@ const Game = (() => {
   const startGame = () => {
     const playerXName = prompt("Enter Player X's name:");
     const playerOName = prompt("Enter Player O's name:");
-    
+
     playerX = Player(playerXName, 'X');
     playerO = Player(playerOName, 'O');
     currentPlayer = playerX;
 
     document.getElementById('firstPlayer').textContent = `Player X: ${playerX.name}`;
     document.getElementById('secondPlayer').textContent = `Player O: ${playerO.name}`;
+    document.getElementById('resultDisplay').textContent = ''; // Clear the results display
 
     alert(`${currentPlayer.name}, it's your turn.`);
     gameDisplay();
   };
 
+  const resetGame = () => {
+    Gameboard.resetBoard();
+    document.getElementById('firstPlayer').textContent = 'Player X:';
+    document.getElementById('secondPlayer').textContent = 'Player O:';
+    document.getElementById('resultDisplay').textContent = ''; // Clear the results display
+    gameDisplay();
+  };
+
   return {
+    getCurrentPlayer,
+    playTurn,
     startGame,
-    playTurn
+    resetGame,
   };
 })();
 
@@ -118,7 +135,6 @@ const updateBoardDisplay = () => {
   });
 };
 
-//append the gameboard
 const gameDisplay = () => {
   const gameBoard = document.getElementById('gameBoard');
   gameBoard.innerHTML = ''; // Clear existing cells
@@ -132,7 +148,6 @@ const gameDisplay = () => {
       cell.dataset.col = col;
       cell.textContent = board[row][col];
 
-      // Ensure currentPlayer is updated correctly
       cell.addEventListener('click', () => {
         Game.playTurn(row, col);
       });
@@ -142,7 +157,17 @@ const gameDisplay = () => {
   }
 };
 
-// Initialize the game with prompts for player names
+// Initialize the board display and start the game
 document.addEventListener('DOMContentLoaded', () => {
+  gameDisplay();
   Game.startGame();
+
+  document.getElementById('resetGame').addEventListener('click', () => {
+    Game.resetGame();
+    Game.startGame();
+  });
 });
+
+
+
+

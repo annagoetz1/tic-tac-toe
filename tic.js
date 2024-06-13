@@ -118,6 +118,7 @@ const updateBoardDisplay = () => {
   });
 };
 
+//append the gameboard
 const gameDisplay = () => {
   const gameBoard = document.getElementById('gameBoard');
   gameBoard.innerHTML = ''; // Clear existing cells

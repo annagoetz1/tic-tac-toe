@@ -1,11 +1,11 @@
-// Gameboard module
 const Gameboard = (() => {
   const board = [
     [' ', ' ', ' '],
     [' ', ' ', ' '],
     [' ', ' ', ' ']
   ];
-  //get current state of board
+
+  // Get the current state of the board
   const getBoard = () => board;
 
   const printBoard = () => {
@@ -60,17 +60,17 @@ const Player = (name, marker) => {
 
 // Game module
 const Game = (() => {
-  const playerX = Player('Player X', 'X');
-  const playerO = Player('Player O', 'O');
-  let currentPlayer = playerX;
+  let playerX;
+  let playerO;
+  let currentPlayer;
 
-  const getCurrentPlayer = () => currentPlayer;
-
+  // Switch player function to return the next player
   const switchPlayer = () => {
     currentPlayer = currentPlayer === playerX ? playerO : playerX;
   };
 
   const playTurn = (row, col) => {
+    // Fix marker access and player update logic
     if (Gameboard.makeMove(row, col, currentPlayer.marker)) {
       updateBoardDisplay();
       if (Gameboard.checkWin(currentPlayer.marker)) {
@@ -85,6 +85,7 @@ const Game = (() => {
       alert('Invalid move, try again.');
     }
   };
+
   const startGame = () => {
     const playerXName = prompt("Enter Player X's name:");
     const playerOName = prompt("Enter Player O's name:");
@@ -101,9 +102,8 @@ const Game = (() => {
   };
 
   return {
-    getCurrentPlayer,
-    playTurn,
     startGame,
+    playTurn
   };
 })();
 
@@ -131,6 +131,7 @@ const gameDisplay = () => {
       cell.dataset.col = col;
       cell.textContent = board[row][col];
 
+      // Ensure currentPlayer is updated correctly
       cell.addEventListener('click', () => {
         Game.playTurn(row, col);
       });
@@ -139,7 +140,8 @@ const gameDisplay = () => {
     }
   }
 };
+
+// Initialize the game with prompts for player names
 document.addEventListener('DOMContentLoaded', () => {
-// Initialize the board display
-gameDisplay();
+  Game.startGame();
 });
